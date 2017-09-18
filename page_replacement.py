@@ -18,7 +18,7 @@ class PageReplacement:
 		page_frames = [None]* frames
 		print "LRU"
 
-	def lru(self):
+	def lfu(self):
 		page_frames = [None]* frames
 		print "LFU"
 
