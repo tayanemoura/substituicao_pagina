@@ -10,10 +10,9 @@ class PageReplacement:
 		 print self.pages
 		 self.fifo()		 
 		 self.random()
-		 #self.lru()
+		 self.lru()
 		 self.lfu()
 		 
-
 	def fifo(self):
 		print "\n", "\t", "\t", "ALGORITMO FIFO"
 		print "-------------------------------------------------------"
@@ -30,7 +29,7 @@ class PageReplacement:
 		for page in self.pages:
 			
 			if(page in page_frames):
-				print "JA EXISTE","\t",page,"\t","NA PAGINA: ","\t",page_frames, "\n"
+				print "JA EXISTE","\t",page,"\t","NA PAGINA: ","\t",page_frames
 				hit += 1
 			else:
 				i = self.free_space(page_frames)
@@ -44,10 +43,6 @@ class PageReplacement:
 					i = page_frames.index(queue[0])
 					troca = page_frames[i]
 					page_frames[i] = page
-					
-					#troca = page_frames.pop(0)  
-					#page_frames.append(page) 
-					
 					queue.pop(0)
 					queue.append(page)
 
@@ -65,8 +60,53 @@ class PageReplacement:
 		print "\n"
 
 	def lru(self):
+		print "\n", "\t", "\t", "ALGORITMO LRU"
+		print "-------------------------------------------------------"
 		page_frames = [None]* frames
-		print "LRU"
+		
+		#fila auxiliar para guardar a ordem que entraram
+		queue = [None] * frames
+
+		miss = 0
+		hit = 0
+		troca=0
+		per_miss = 0
+		per_hit = 0
+		
+		for page in self.pages:
+			
+			if(page in page_frames):
+				print "JA EXISTE","\t",page,"\t","NA PAGINA: ","\t",page_frames
+				hit += 1
+				queue.pop(queue.index(page))
+				queue.append(page)
+			else:
+				i = self.free_space(page_frames)
+				if (i != -1):
+					page_frames[i] = page
+					queue.pop(0)
+					queue.append(page)
+					print "ACRESCENTANDO:","\t",page,"\t",'NA PAGINA: ',"\t",page_frames
+				else:
+								
+					i = page_frames.index(queue[0])
+					troca = page_frames[i]
+					page_frames[i] = page
+					queue.pop(0)
+					queue.append(page)
+
+					print "TROCANDO","\t",troca,"POR",page,'NA PAGINA: ', "\t", page_frames			
+				miss+=1
+
+		#cálculos
+		per_miss = str("{0:.2f}".format(100 * float(miss) / float(len(self.pages)))) + " %"
+		per_hit = str("{0:.2f}".format(100 * float(hit) / float(len(self.pages)))) + " %"
+		
+		print "\n"
+		print "TOTAL DE MISS: " + str(miss), " - ", per_miss
+		print "TOTAL DE HIT: " + str(hit), " - " , per_hit
+		print "\n"
+
 
 	def lfu(self):
 		print "\n", "\t", "\t", "ALGORITMO LFU"
@@ -89,7 +129,7 @@ class PageReplacement:
 		for page in self.pages:
 			
 			if(page in page_frames):
-				print "JA EXISTE","\t",page,"\t","NA PAGINA: ","\t",page_frames, "\n"
+				print "JA EXISTE","\t",page,"\t","NA PAGINA: ","\t",page_frames
 				hit += 1
 				if page in frequency:
 					frequency[page] += 1
@@ -112,9 +152,6 @@ class PageReplacement:
 
 					if(len(least)==1):
 						victim = least[0]
-
-
-
 					else:
 						#se tiver mais de um, fifo:
 
@@ -131,7 +168,6 @@ class PageReplacement:
 					#atualiza fila
 					queue.pop(queue.index(victim))
 					queue.append(page)
-
 
 					print "TROCANDO","\t",troca,"POR",page,'NA PAGINA: ', "\t", page_frames			
 				miss+=1
