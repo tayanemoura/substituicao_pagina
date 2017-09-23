@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 from random import randint
+import sys
+
+
 
 class PageReplacement:
-	def __init__(self, frames):
+	def __init__(self, frames, path):
 		 self.frames = frames
 		 self.pages = []
-		 file = open("pages.txt")
+		 try:
+		 	file = open(path)
+		 except IOError:
+		 	print "Arquivo não existe"
+		 	sys.exit()
 		 self.pages = file.read().split('\n')
+		 file.close()
 		 print self.pages
 		 self.fifo()		 
 		 self.random()
@@ -250,7 +258,7 @@ class PageReplacement:
 	print " SIMULADOR DE TROCA DE PAGINA:"
 		
 frames = input("Qual a capacidade total da memoria?\n")
-#caminho = input ("Qual o caminho do arquivo?\n")
+path = raw_input ("Qual o caminho do arquivo?\n")
 
 
-page = PageReplacement(frames)
+page = PageReplacement(frames, path)
